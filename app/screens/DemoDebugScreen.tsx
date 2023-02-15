@@ -1,6 +1,7 @@
 import React, { FC } from "react"
 import * as Application from "expo-application"
-import { Linking, Platform, TextStyle, View, ViewStyle } from "react-native"
+import { Linking, TextStyle, View, ViewStyle } from "react-native"
+
 import { Button, ListItem, Screen, Text } from "../components"
 import { DemoTabScreenProps } from "../navigators/DemoNavigator"
 import { colors, spacing } from "../theme"
@@ -16,9 +17,11 @@ export const DemoDebugScreen: FC<DemoTabScreenProps<"DemoDebug">> = function Dem
 ) {
   const {
     authenticationStore: { logout },
+    movieStore: { top250M },
   } = useStores()
 
   const usingHermes = typeof HermesInternal === "object" && HermesInternal !== null
+  console.log(top250M)
 
   const demoReactotron = React.useMemo(
     () => async () => {
@@ -89,7 +92,7 @@ export const DemoDebugScreen: FC<DemoTabScreenProps<"DemoDebug">> = function Dem
       </View>
       <View style={$buttonContainer}>
         <Button style={$button} tx="demoDebugScreen.reactotron" onPress={demoReactotron} />
-        <Text style={$hint} tx={`demoDebugScreen.${Platform.OS}ReactotronHint` as const} />
+        {/* <Text style={$hint} tx={`demoDebugScreen.${Platform.OS}ReactotronHint` as const} /> */}
       </View>
       <View style={$buttonContainer}>
         <Button style={$button} tx="common.logOut" onPress={logout} />
@@ -129,12 +132,9 @@ const $button: ViewStyle = {
 const $buttonContainer: ViewStyle = {
   marginBottom: spacing.medium,
 }
-
-const $hint: TextStyle = {
-  color: colors.palette.neutral600,
-  fontSize: 12,
-  lineHeight: 15,
-  paddingBottom: spacing.large,
-}
-
-// @demo remove-file
+// const $hint: TextStyle = {
+//   color: colors.palette.neutral600,
+//   fontSize: 12,
+//   lineHeight: 15,
+//   paddingBottom: spacing.large,
+// }

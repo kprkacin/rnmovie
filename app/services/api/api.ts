@@ -5,18 +5,15 @@
  * See the [Backend API Integration](https://github.com/infinitered/ignite/blob/master/docs/Backend-API-Integration.md)
  * documentation for more details.
  */
-import {
-  ApiResponse, // @demo remove-current-line
-  ApisauceInstance,
-  create,
-} from "apisauce"
+import { ApiResponse, ApisauceInstance, create } from "apisauce"
 import Config from "../../config"
-import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem" // @demo remove-current-line
-import type {
-  ApiConfig,
-  ApiFeedResponse, // @demo remove-current-line
-} from "./api.types"
-import type { EpisodeSnapshotIn } from "../../models/Episode" // @demo remove-current-line
+import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
+import type { ApiConfig, ApiFeedResponse, MovieDetail } from "./api.types"
+import { MovieSnapshotIn } from "../../models/Movies/Movie"
+import { transformToMovie, transformToMovieDetail } from "./transformations"
+import { exampleDetail } from "../../models/Movies/jsonconts"
+const apiKey = "k_jp9rto8f"
+// temp1const apiKey = "k_e2819k37"
 
 /**
  * Configuring the apisauce instance.
@@ -48,16 +45,10 @@ export class Api {
     })
   }
 
-  // @demo remove-block-start
-  /**
-   * Gets a list of recent React Native Radio episodes.
-   */
-  async getEpisodes(): Promise<{ kind: "ok"; episodes: EpisodeSnapshotIn[] } | GeneralApiProblem> {
+  async getTop250Movies(): Promise<{ kind: "ok"; data: MovieSnapshotIn[] } | GeneralApiProblem> {
     // make the api call
-    const response: ApiResponse<ApiFeedResponse> = await this.apisauce.get(
-      `api.json?rss_url=https%3A%2F%2Ffeeds.simplecast.com%2FhEI_f9Dx`,
-    )
-
+    const response: ApiResponse<ApiFeedResponse> = await this.apisauce.get(`Top250Movies/${apiKey}`)
+    console.log(response)
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
@@ -69,11 +60,8 @@ export class Api {
       const rawData = response.data
 
       // This is where we transform the data into the shape we expect for our MST model.
-      const episodes: EpisodeSnapshotIn[] = rawData.items.map((raw) => ({
-        ...raw,
-      }))
 
-      return { kind: "ok", episodes }
+      return { kind: "ok", data: response.data.items.map(transformToMovie) }
     } catch (e) {
       if (__DEV__) {
         console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
@@ -81,7 +69,166 @@ export class Api {
       return { kind: "bad-data" }
     }
   }
-  // @demo remove-block-end
+
+  async getMostPopularMovies(): Promise<
+    { kind: "ok"; data: MovieSnapshotIn[] } | GeneralApiProblem
+  > {
+    // make the api call
+    const response: ApiResponse<ApiFeedResponse> = await this.apisauce.get(
+      `MostPopularMovies/${apiKey}`,
+    )
+    console.log(response)
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawData = response.data
+
+      // This is where we transform the data into the shape we expect for our MST model.
+
+      return { kind: "ok", data: response.data.items.map(transformToMovie) }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  async getMostPopularTVs(): Promise<{ kind: "ok"; data: MovieSnapshotIn[] } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ApiFeedResponse> = await this.apisauce.get(
+      `MostPopularTVs/${apiKey}`,
+    )
+    console.log(response)
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawData = response.data
+
+      // This is where we transform the data into the shape we expect for our MST model.
+
+      return { kind: "ok", data: response.data.items.map(transformToMovie) }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  async getInTheaters(): Promise<{ kind: "ok"; data: MovieSnapshotIn[] } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ApiFeedResponse> = await this.apisauce.get(`InTheaters/${apiKey}`)
+    console.log(response)
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawData = response.data
+
+      // This is where we transform the data into the shape we expect for our MST model.
+
+      return { kind: "ok", data: response.data.items.map(transformToMovie) }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  async getComingSoon(): Promise<{ kind: "ok"; data: MovieSnapshotIn[] } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ApiFeedResponse> = await this.apisauce.get(`ComingSoon/${apiKey}`)
+    console.log(response)
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawData = response.data
+
+      // This is where we transform the data into the shape we expect for our MST model.
+
+      return { kind: "ok", data: response.data.items.map(transformToMovie) }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  // async getBoxOffice(): Promise<{ kind: "ok"; data: MovieSnapshotIn[] } | GeneralApiProblem> {
+  //   // make the api call
+  //   const response: ApiResponse<ApiFeedResponse> = await this.apisauce.get(`BoxOffice/${apiKey}`)
+  //   console.log(response)
+  //   // the typical ways to die when calling an api
+  //   if (!response.ok) {
+  //     const problem = getGeneralApiProblem(response)
+  //     if (problem) return problem
+  //   }
+
+  //   // transform the data into the format we are expecting
+  //   try {
+  //     const rawData = response.data
+
+  //     // This is where we transform the data into the shape we expect for our MST model.
+
+  //     return { kind: "ok", data: response.data.items.map(transformToMovieDetail)}
+  //   } catch (e) {
+  //     if (__DEV__) {
+  //       console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+  //     }
+  //     return { kind: "bad-data" }
+  //   }
+  // }
+
+  async getMovieDetails(
+    id: string,
+  ): Promise<{ kind: "ok"; data: MovieDetail } | GeneralApiProblem> {
+    // // make the api call
+    // const response: ApiResponse<MovieDetail> = await this.apisauce.get(
+    //   `Title/${apiKey}/${id}/Ratings,Images`,
+    // )
+    // console.tron.log(response)
+    // // the typical ways to die when calling an api
+    // if (!response.ok) {
+    //   const problem = getGeneralApiProblem(response)
+    //   if (problem) return problem
+    // }
+
+    // transform the data into the format we are expecting
+    try {
+      const transformed = transformToMovieDetail(exampleDetail)
+
+      // This is where we transform the data into the shape we expect for our MST model.
+      console.tron.log(transformed, "rawData")
+      return { kind: "ok", data: transformed }
+    } catch (e) {
+      if (__DEV__) {
+        // console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
 }
 
 // Singleton instance of the API for convenience

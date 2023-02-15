@@ -5,16 +5,15 @@ import { TextStyle, ViewStyle } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Icon } from "../components"
 import { translate } from "../i18n"
-import { DemoCommunityScreen, DemoShowroomScreen, DemoDebugScreen } from "../screens"
-import { DemoPodcastListScreen } from "../screens/DemoPodcastListScreen"
+import { DemoDebugScreen, FavoritesScreen } from "../screens"
 import { colors, spacing, typography } from "../theme"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
+import { ShowroomNavigator } from "./ShowroomNavigator"
 
 export type DemoTabParamList = {
-  DemoCommunity: undefined
   DemoShowroom: { queryIndex?: string; itemIndex?: string }
   DemoDebug: undefined
-  DemoPodcastList: undefined
+  Favorites: undefined
 }
 
 /**
@@ -46,28 +45,18 @@ export function DemoNavigator() {
     >
       <Tab.Screen
         name="DemoShowroom"
-        component={DemoShowroomScreen}
+        component={ShowroomNavigator}
         options={{
-          tabBarLabel: translate("demoNavigator.componentsTab"),
+          tabBarLabel: "Home",
           tabBarIcon: ({ focused }) => <Icon icon="components" color={focused && colors.tint} />,
         }}
       />
-
       <Tab.Screen
-        name="DemoCommunity"
-        component={DemoCommunityScreen}
+        name="Favorites"
+        component={FavoritesScreen}
         options={{
-          tabBarLabel: translate("demoNavigator.communityTab"),
-          tabBarIcon: ({ focused }) => <Icon icon="community" color={focused && colors.tint} />,
-        }}
-      />
-
-      <Tab.Screen
-        name="DemoPodcastList"
-        component={DemoPodcastListScreen}
-        options={{
-          tabBarLabel: translate("demoNavigator.podcastListTab"),
-          tabBarIcon: ({ focused }) => <Icon icon="podcast" color={focused && colors.tint} />,
+          tabBarLabel: "Favorites",
+          tabBarIcon: ({ focused }) => <Icon icon="heart" color={focused && colors.tint} />,
         }}
       />
 
@@ -98,5 +87,3 @@ const $tabBarLabel: TextStyle = {
   lineHeight: 16,
   flex: 1,
 }
-
-// @demo remove-file

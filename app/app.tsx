@@ -100,6 +100,7 @@ function App(props: AppProps) {
     prefixes: [prefix],
     config,
   }
+  const other = []
 
   // otherwise, we're ready to render the app
   return (
