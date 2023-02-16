@@ -12,6 +12,7 @@ import {
 } from "react-native"
 
 import { AutoImage, Button, ListItem, Screen, Text } from "../components"
+import { Button as RNEButton } from "@rneui/base"
 import { DemoTabScreenProps } from "../navigators/DemoNavigator"
 import { colors, spacing, typography } from "../theme"
 import { isRTL } from "../i18n"
@@ -25,6 +26,7 @@ import Video from "react-native-video"
 import Carousel from "react-native-snap-carousel"
 import { useNavigation } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 
 interface MovieDetailSceenProps extends AppStackScreenProps<"MovieDetail"> {}
 
@@ -64,16 +66,26 @@ const RenderCarauselItem = ({ item }, push) => {
   )
 }
 
-export const MovieDetailScreen: FC<MovieDetailSceenProps> = function MovieScreen(_props) {
+export const MovieDetailScreen: FC<MovieDetailSceenProps> = observer(function MovieScreen(_props) {
   const { movie } = _props.route.params
   const { push } = useNavigation<StackNavigationProp<AppStackParamList>>()
-
+  const {
+    movieStore: { toggleFavorite, hasFavorite },
+  } = useStores()
   const [movieDetail, setMovieDetail] = React.useState<MovieDetail>(null)
   const [loading, setLoading] = React.useState<boolean>(true)
+
+  const [favorite, setFavorite] = React.useState(() => hasFavorite(movie))
+
   const trailerRef = React.useRef<Video>(null)
   const carauselRef = React.useRef<any>(null)
   const carauselRefActors = React.useRef<any>(null)
   const carauselRefImages = React.useRef<any>(null)
+
+  const toggle = (movie: Movie) => {
+    toggleFavorite(movie)
+    setFavorite(!favorite)
+  }
 
   React.useEffect(() => {
     ;(async () => {
@@ -102,14 +114,34 @@ export const MovieDetailScreen: FC<MovieDetailSceenProps> = function MovieScreen
   return (
     <Screen preset="scroll" safeAreaEdges={["top"]} contentContainerStyle={$container}>
       {loading && !movieDetail ? (
-        <>
+        <View>
           <Skeleton height={400} style={$image} />
           <Skeleton height={64} style={$title} />
           <Skeleton height={300} style={$title} />
-        </>
+        </View>
       ) : (
-        <>
+        <View>
           <AutoImage source={{ uri: movieDetail?.image }} maxHeight={400} style={$image} />
+          <View>
+            <RNEButton
+              containerStyle={{
+                position: "absolute",
+                top: -120,
+                right: 0,
+              }}
+              onPress={() => {
+                toggle(movie)
+              }}
+              type="clear"
+              icon={
+                !favorite ? (
+                  <Icon size={50} name="favorite-border" color={colors.tint} />
+                ) : (
+                  <Icon size={50} name="favorite" color={colors.tint} />
+                )
+              }
+            />
+          </View>
           <Text style={$title} preset="heading">
             {movieDetail?.fullTitle}
           </Text>
@@ -288,11 +320,11 @@ export const MovieDetailScreen: FC<MovieDetailSceenProps> = function MovieScreen
               />
             </View>
           )}
-        </>
+        </View>
       )}
     </Screen>
   )
-}
+})
 
 const $backgroundVideo: any = {
   backgroundVideo: {

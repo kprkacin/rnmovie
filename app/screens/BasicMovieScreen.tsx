@@ -1,6 +1,6 @@
 import React, { FC } from "react"
-import { FlatList, SafeAreaView, TextStyle, View, ViewStyle } from "react-native"
-import { Text } from "../components"
+import { FlatList, TextStyle, View, ViewStyle } from "react-native"
+import { Text, Screen } from "../components"
 
 import { colors, spacing } from "../theme"
 import { isRTL } from "../i18n"
@@ -34,17 +34,18 @@ export const BasicMovieScreen: FC<BasicMovieScreenProps> = observer(function Bas
   console.tron.log(data, "movieStore")
 
   return (
-    <View style={$container}>
+    <Screen safeAreaEdges={["top"]} contentContainerStyle={$container}>
       <Text style={$title} preset="heading">
         {title}
       </Text>
-      <SafeAreaView style={$itemsContainer}>
+      <View style={$itemsContainer}>
         {/* {top250M.map((item, index) => (
           <MovieListItem key={index} movie={item} />
         ))} */}
         <FlatList<Movie>
           data={data.get(api) || []}
           keyExtractor={(item) => item.id}
+          ListEmptyComponent={() => <Text preset="subheading">No items! Try another type!</Text>}
           renderItem={(item) => (
             <MovieListItem
               movie={item.item}
@@ -53,8 +54,8 @@ export const BasicMovieScreen: FC<BasicMovieScreenProps> = observer(function Bas
             />
           )}
         />
-      </SafeAreaView>
-    </View>
+      </View>
+    </Screen>
   )
 })
 

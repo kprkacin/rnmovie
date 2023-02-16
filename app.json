@@ -1,9 +1,9 @@
 {
-  "name": "ARRN",
-  "displayName": "ARRN",
+  "name": "IMDB Tracker",
+  "displayName": "IMDB Tracker",
   "expo": {
-    "name": "ARRN",
-    "slug": "ARRN",
+    "name": "IMDB Tracker",
+    "slug": "IMDB Tracker",
     "scheme": "arrn",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -36,8 +36,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.arrn",
       "splash": {
-        "image": "./assets/images/splash-logo-ios-mobile.png",
-        "tabletImage": "./assets/images/splash-logo-ios-tablet.png",
+        "image": "./assets/images/splash.png",
+        "tabletImage": "./assets/images/splash.png",
         "resizeMode": "contain",
         "backgroundColor": "#191015"
       }

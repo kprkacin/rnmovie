@@ -25,6 +25,12 @@ const $customListItem: ViewStyle = {
 
 const MovieListItem = observer(function EpisodeCard({ movie, toggleFavorite, hasFavorite }: Props) {
   const { navigate } = useNavigation<StackNavigationProp<AppStackParamList>>()
+  const [favorite, setFavorite] = React.useState(() => hasFavorite(movie))
+
+  const toggle = (movie: Movie) => {
+    toggleFavorite(movie)
+    setFavorite(!favorite)
+  }
 
   return (
     <ListItem.Swipeable
@@ -59,11 +65,11 @@ const MovieListItem = observer(function EpisodeCard({ movie, toggleFavorite, has
           }}
           onPress={() => {
             action()
-            toggleFavorite(movie)
+            toggle(movie)
           }}
           type="clear"
           icon={
-            !hasFavorite(movie) ? (
+            !favorite ? (
               <Icon name="favorite-border" color={colors.tint} />
             ) : (
               <Icon name="favorite" color={colors.tint} />

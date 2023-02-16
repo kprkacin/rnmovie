@@ -205,19 +205,19 @@ export class Api {
     id: string,
   ): Promise<{ kind: "ok"; data: MovieDetail } | GeneralApiProblem> {
     // // make the api call
-    // const response: ApiResponse<MovieDetail> = await this.apisauce.get(
-    //   `Title/${apiKey}/${id}/Ratings,Images`,
-    // )
-    // console.tron.log(response)
-    // // the typical ways to die when calling an api
-    // if (!response.ok) {
-    //   const problem = getGeneralApiProblem(response)
-    //   if (problem) return problem
-    // }
+    const response: ApiResponse<MovieDetail> = await this.apisauce.get(
+      `Title/${apiKey}/${id}/Ratings,Images`,
+    )
+    console.tron.log(response)
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
 
     // transform the data into the format we are expecting
     try {
-      const transformed = transformToMovieDetail(exampleDetail)
+      const transformed = transformToMovieDetail(response.data)
 
       // This is where we transform the data into the shape we expect for our MST model.
       console.tron.log(transformed, "rawData")

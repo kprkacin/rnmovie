@@ -1,6 +1,6 @@
 import React, { FC } from "react"
 import { FlatList, SafeAreaView, TextStyle, View, ViewStyle } from "react-native"
-import { Text } from "../components"
+import { Text, Screen } from "../components"
 
 import { colors, spacing } from "../theme"
 import { isRTL } from "../i18n"
@@ -17,29 +17,32 @@ export const FavoritesScreen: FC<DemoTabScreenProps<"DemoDebug">> = observer(
     const {
       movieStore: { favorites, toggleFavorite, hasFavorite },
     } = useStores()
-
+    const [key, setKey] = React.useState(0)
+    const toggle = (item: Movie) => {
+      toggleFavorite(item)
+      setKey(key + 1)
+    }
     return (
-      <View style={$container}>
+      <Screen safeAreaEdges={["top"]} contentContainerStyle={$container}>
         <Text style={$title} preset="heading">
           Favorites
         </Text>
-        <SafeAreaView style={$itemsContainer}>
+        <View style={$itemsContainer} key={key}>
           {/* {top250M.map((item, index) => (
           <MovieListItem key={index} movie={item} />
         ))} */}
           <FlatList<Movie>
             data={favorites}
+            ListEmptyComponent={() => (
+              <Text preset="subheading">You currently have no favorites :(</Text>
+            )}
             keyExtractor={(item) => item.id}
             renderItem={(item) => (
-              <MovieListItem
-                movie={item.item}
-                toggleFavorite={toggleFavorite}
-                hasFavorite={hasFavorite}
-              />
+              <MovieListItem movie={item.item} toggleFavorite={toggle} hasFavorite={hasFavorite} />
             )}
           />
-        </SafeAreaView>
-      </View>
+        </View>
+      </Screen>
     )
   },
 )
